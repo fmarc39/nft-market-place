@@ -105,6 +105,7 @@ export default function CreateItem() {
         />
         <input type="file" name="Asset" className="my-4" onChange={onChange} />
         {fileUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img className="rounded mt-4" width="350" src={fileUrl} alt="img" />
         )}
         <button

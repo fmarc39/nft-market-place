@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -16,7 +17,7 @@ export default function Home() {
   }, []);
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://rpc-mumbai.matic.today"
+      "https://matic-mumbai.chainstacklabs.com"
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
@@ -71,9 +72,9 @@ export default function Home() {
       <div className="px-4" style={{ maxWidth: "1600px" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
+            <div key={i} className="overflow-hidden rounded-2xl">
               <img src={nft.image} alt={nft.name} />
-              <div className="p-4">
+              <div className="p-4 bg-white">
                 <p
                   style={{ height: "64px" }}
                   className="text-2xl font-semibold"
@@ -84,12 +85,12 @@ export default function Home() {
                   <p className="text-gray-400">{nft.description}</p>
                 </div>
               </div>
-              <div className="p-4 bg-black">
-                <p className="text-2xl mb-4 font-bold text-white">
+              <div className="p-4 bg-white9 rounded-sm">
+                <p className="text-2xl mb-4 font-bold text-black">
                   {nft.price} ETH
                 </p>
                 <button
-                  className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+                  className="w-full bg-red text-white font-bold py-2 px-12 rounded"
                   onClick={() => buyNft(nft)}
                 >
                   Buy

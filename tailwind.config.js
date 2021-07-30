@@ -2,10 +2,27 @@ module.exports = {
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: (theme) => ({
+        "bg-img": "url('../public/assets/images/photography-3130594_1920.jpg')",
+      }),
+    },
+    fontFamily: {
+      sans: ["Roboto"],
+    },
+    colors: {
+      red: "#F64C72",
+      purple: "#553D67",
+      lightBlue: "#A8D0E6",
+      blue: "#242582",
+      darkBlue: "#2F2FA2",
+      white9: "rgb(255, 255, 255, 0.95)",
+      white: "#FFF",
+      black: "#000",
+    },
   },
   variants: {
     extend: {},
   },
   plugins: [],
-}
+};
