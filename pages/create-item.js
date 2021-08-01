@@ -18,14 +18,18 @@ export default function CreateItem() {
     name: "",
     description: "",
   });
+  const [uploadProg, setUploadProg] = useState(0);
   const router = useRouter();
 
   async function onChange(e) {
     const file = e.target.files[0];
+    const fileSize = e.target.files[0].size;
     try {
       const added = await client.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
+        progress: (prog) =>
+          setUploadProg(Math.round(100 - ((fileSize - prog) / fileSize) * 100)),
       });
+
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
     } catch (error) {
@@ -81,36 +85,59 @@ export default function CreateItem() {
 
   return (
     <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
+      <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl">
         <input
           placeholder="Asset Name"
-          className="mt-8 border rounded p-4"
+          className="mt-8 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
         <textarea
           placeholder="Asset Description"
-          className="mt-2 border rounded p-4"
+          className="mt-2 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
         <input
-          placeholder="Asset Price in Eth"
-          className="mt-2 border rounded p-4"
+          placeholder="Asset Price in Matic"
+          className="mt-2 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
           }
         />
-        <input type="file" name="Asset" className="my-4" onChange={onChange} />
+        <input
+          type="file"
+          name="Asset"
+          className="my-4 rounded"
+          onChange={onChange}
+        />
+
+        {uploadProg !== 0 && (
+          <div className="h-5 w-full bg-white rounded-lg">
+            <div
+              style={{ width: `${uploadProg}%` }}
+              className={`h-full ${
+                uploadProg < 70 ? "bg-red rounded-lg" : "bg-green rounded-lg"
+              }`}
+            >
+              <p className="text-center">{uploadProg} %</p>
+            </div>
+          </div>
+        )}
         {fileUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="rounded mt-4" width="350" src={fileUrl} alt="img" />
+          <img
+            className="rounded mt-4 align-middle m-auto"
+            width="350"
+            src={fileUrl}
+            alt="img"
+          />
         )}
         <button
           onClick={createMarket}
-          className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
+          className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green"
         >
           Create Digital Asset
         </button>

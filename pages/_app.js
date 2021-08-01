@@ -10,13 +10,13 @@ import Sell from "../public/assets/logo/dollar-symbol.svg";
 function MyApp({ Component, pageProps }) {
   return (
     <div className=" font-roboto min-h-screen bg-bg-img  bg-no-repea bg-cover t bg-fixed no-re relative">
-      <nav className="p-10 text-w flex justify-center text-2xl text-white items-center">
+      <nav className="p-10 text-w flex justify-center text-2xl text-white items-center mb-6">
         <div className="mr-10 absolute top-6 left-6">
           <Image src={Logo} alt="logo" height={80} width={80} />
           <h1 className="text-center">NFTof</h1>
         </div>
         <Link href="/">
-          <a className="mr-12 flex items-center">
+          <a className="mr-12 flex items-center duration-200 hover:text-green">
             <div className="mr-3">
               <Image src={HomeLogo} alt="homepageLogo" height={40} width={40} />
             </div>
@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/create-item">
-          <a className="mr-12 flex items-center ">
+          <a className="mr-12 flex items-center duration-200 hover:text-green">
             <div className="mr-3">
               <Image src={Sell} alt="homepageLogo" height={40} width={40} />
             </div>
@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/my-assets">
-          <a className="mr-12 flex items-center">
+          <a className="mr-12 flex items-center duration-200 hover:text-green">
             {" "}
             <div className="mr-3">
               <Image src={Chest} alt="homepageLogo" height={40} width={40} />
@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/creator-dashboard">
-          <a className="flex items-center">
+          <a className="flex items-center duration-200 hover:text-green">
             {" "}
             <div className="mr-3">
               <Image
