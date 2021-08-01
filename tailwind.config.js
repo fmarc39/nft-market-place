@@ -12,9 +12,10 @@ module.exports = {
     },
     colors: {
       red: "#F64C72",
+      green: "#00EE95",
       purple: "#553D67",
       lightBlue: "#A8D0E6",
-      blue: "#242582",
+      blue: "#00A7F3",
       darkBlue: "#2F2FA2",
       white9: "rgb(255, 255, 255, 0.95)",
       white: "#FFF",

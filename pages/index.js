@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import LoadingLogo from "../public/assets/logo/Blocks-1s-200px.svg";
+import Image from "next/image";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
@@ -12,6 +14,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const [loadPhoto, setLoadPhoto] = useState("loading-img");
   useEffect(() => {
     loadNFTs();
   }, []);
@@ -67,17 +70,37 @@ export default function Home() {
   }
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
+  if (loadingState === "not-loaded")
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={LoadingLogo} alt="loading-logo" height={200} width={200} />
+      </div>
+    );
   return (
     <div className="flex justify-center">
-      <div className="px-4" style={{ maxWidth: "1600px" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+      <div className="px-4 flex justify-evenly" style={{ maxWidth: "1600px" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4">
           {nfts.map((nft, i) => (
-            <div key={i} className="overflow-hidden rounded-2xl">
-              <img src={nft.image} alt={nft.name} />
-              <div className="p-4 bg-white">
+            <div
+              key={i}
+              className={
+                loadPhoto === "loaded-img"
+                  ? "rounded-xl overflow-hidden"
+                  : "hidden"
+              }
+            >
+              <img
+                src={nft.image}
+                alt={nft.name}
+                onLoad={() => {
+                  setLoadPhoto("loaded-img");
+                }}
+                className="transform transition duration-500 hover:scale-105 cursor-pointer"
+              />
+              <div className="p-4 bg-white9">
                 <p
                   style={{ height: "64px" }}
-                  className="text-2xl font-semibold"
+                  className="text-2xl font-semibold text-center"
                 >
                   {nft.name}
                 </p>
@@ -85,12 +108,12 @@ export default function Home() {
                   <p className="text-gray-400">{nft.description}</p>
                 </div>
               </div>
-              <div className="p-4 bg-white9 rounded-sm">
+              <div className="p-4 bg-white">
                 <p className="text-2xl mb-4 font-bold text-black">
-                  {nft.price} ETH
+                  {nft.price} Matic
                 </p>
                 <button
-                  className="w-full bg-red text-white font-bold py-2 px-12 rounded"
+                  className="w-full bg-blue text-white font-bold py-2 px-12 rounded duration-200 hover:bg-green"
                   onClick={() => buyNft(nft)}
                 >
                   Buy
