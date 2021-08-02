@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Web3Modal from "web3modal";
-
-const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-
-import { nftaddress, nftmarketaddress } from "../config";
-
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+import { nftaddress, nftmarketaddress } from "../config";
+
+const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
@@ -114,16 +112,24 @@ export default function CreateItem() {
           onChange={onChange}
         />
 
-        {uploadProg !== 0 && (
-          <div className="h-5 w-full bg-white rounded-lg">
-            <div
-              style={{ width: `${uploadProg}%` }}
-              className={`h-full ${
-                uploadProg < 70 ? "bg-red rounded-lg" : "bg-green rounded-lg"
-              }`}
-            >
-              <p className="text-center">{uploadProg} %</p>
-            </div>
+        {uploadProg !== 100 && (
+          <div className="transition-all ease-out duration-1000">
+            {uploadProg !== 0 && (
+              <div className="h-5 w-full bg-white rounded-lg">
+                <div
+                  style={{ width: `${uploadProg}%` }}
+                  className={`h-full ${
+                    uploadProg < 70
+                      ? "bg-red rounded-lg transition-all ease-out duration-1000"
+                      : "bg-green rounded-lg transition-all ease-out duration-1000"
+                  }`}
+                >
+                  {uploadProg > 5 && (
+                    <p className="text-center">{uploadProg} %</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
         {fileUrl && (

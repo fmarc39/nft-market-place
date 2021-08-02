@@ -20,7 +20,7 @@ export default function Home() {
   }, []);
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://matic-mumbai.chainstacklabs.com"
+      "https://rpc-mumbai.maticvigil.com"
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
@@ -92,6 +92,8 @@ export default function Home() {
               <img
                 src={nft.image}
                 alt={nft.name}
+                async
+                lazy="true"
                 onLoad={() => {
                   setLoadPhoto("loaded-img");
                 }}
