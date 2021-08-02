@@ -41,3 +41,5 @@ artifacts
 
 #Env Vars
 .secret
+.infuraid
+config.js
