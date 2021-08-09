@@ -19,6 +19,7 @@ module.exports = {
       darkBlue: "#2F2FA2",
       white9: "rgb(255, 255, 255, 0.95)",
       white5: "rgb(255, 255, 255, 0.5)",
+      white1: "rgb(255, 255, 255, 0.1)",
       white: "#FFF",
       black: "#000",
     },

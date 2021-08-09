@@ -83,7 +83,7 @@ export default function CreateItem() {
 
   return (
     <div className="flex justify-center">
-      <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl">
+      <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl mb-32">
         <input
           placeholder="Asset Name"
           className="mt-8 rounded p-4"

@@ -14,10 +14,12 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const [loadPhoto, setLoadPhoto] = useState("loading-img");
+  const [loadPhoto, setLoadPhoto] = useState(false);
+
   useEffect(() => {
     loadNFTs();
   }, []);
+
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
       "https://polygon-mumbai.infura.io/v3/0bde4451fec140b0b6908eb541d38ea9"
@@ -78,27 +80,29 @@ export default function Home() {
     );
   return (
     <div className="flex justify-center">
-      <div className="px-4 flex justify-evenly" style={{ maxWidth: "1600px" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4">
+      <div
+        className="px-4 mb- flex justify-evenly"
+        style={{ maxWidth: "1600px" }}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
           {nfts.map((nft, i) => (
-            <div
-              key={i}
-              className={
-                loadPhoto === "loaded-img"
-                  ? "rounded-xl overflow-hidden"
-                  : "hidden"
+            <div key={i} className="rounded-xl overflow-hidden mb-8">
+              {
+                <img
+                  src={nft.image}
+                  alt={nft.name}
+                  async
+                  lazy="true"
+                  onLoad={() => {
+                    setLoadPhoto(true);
+                  }}
+                  className={
+                    loadPhoto
+                      ? "transform transition duration-500 hover:scale-105 cursor-pointer"
+                      : "hidden"
+                  }
+                />
               }
-            >
-              <img
-                src={nft.image}
-                alt={nft.name}
-                async
-                lazy="true"
-                onLoad={() => {
-                  setLoadPhoto("loaded-img");
-                }}
-                className="transform transition duration-500 hover:scale-105 cursor-pointer"
-              />
               <div className="p-4 bg-white9">
                 <p
                   style={{ height: "64px" }}

@@ -60,15 +60,13 @@ export default function CreatorDashboard() {
   return (
     <div>
       <div className="p-4">
-        <h2 className="text-2xl py-2">Items Created</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+        <h2 className="text-3xl py-2 text-center text-white">Items Created</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-32">
           {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
+            <div key={i} className="shadow rounded-xl overflow-hidden">
               <img src={nft.image} className="rounded" alt="img" />
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Price - {nft.price} Eth
-                </p>
+              <div className="p-4 bg-white">
+                <p className="text-2xl font-bold">Price - {nft.price} Eth</p>
               </div>
             </div>
           ))}
@@ -78,15 +76,12 @@ export default function CreatorDashboard() {
         {Boolean(sold.length) && (
           <div>
             <h2 className="text-2xl py-2">Items sold</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {sold.map((nft, i) => (
-                <div
-                  key={i}
-                  className="border shadow rounded-xl overflow-hidden"
-                >
+                <div key={i} className="shadow rounded-xl overflow-hidden">
                   <img src={nft.image} className="rounded" alt="img" />
-                  <div className="p-4 bg-black">
-                    <p className="text-2xl font-bold text-white">
+                  <div className="p-4 bg-white">
+                    <p className="text-2xl font-bold">
                       Price - {nft.price} Eth
                     </p>
                   </div>
