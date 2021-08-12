@@ -6,20 +6,26 @@ import Web3Modal from "web3modal";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { nftaddress, nftmarketaddress } from "../config";
+import Loader from "../public/assets/logo/Double Ring-1s-200px (1).svg";
+import Image from "next/image";
+import { options } from "colorette";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState(false);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
     description: "",
+    type: "",
   });
   const [uploadProg, setUploadProg] = useState(0);
   const router = useRouter();
 
   async function onChange(e) {
+    setUploadStatus(true);
     const file = e.target.files[0];
     const fileSize = e.target.files[0].size;
     try {
@@ -30,17 +36,23 @@ export default function CreateItem() {
 
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
+      setTimeout(() => {
+        setUploadStatus(false);
+      }, 3000);
     } catch (error) {
       console.log("Error uploading file: ", error);
+      setUploadStatus(false);
     }
   }
   async function createMarket() {
-    const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) return;
+    const { name, description, price, type } = formInput;
+    console.log(type);
+    if (!name || !description || !price || !fileUrl || !type) return;
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
       description,
+      type,
       image: fileUrl,
     });
     try {
@@ -85,32 +97,79 @@ export default function CreateItem() {
     <div className="flex justify-center">
       <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl mb-32">
         <input
-          placeholder="Asset Name"
+          placeholder="Photo Name"
           className="mt-8 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
         <textarea
-          placeholder="Asset Description"
+          placeholder="Photo Description"
           className="mt-2 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
         <input
-          placeholder="Asset Price in Matic"
-          className="mt-2 rounded p-4"
+          placeholder="Photo Price in Matic"
+          type="number"
+          required="required"
+          className="mt-2 rounded p-4 mb-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
           }
         />
-        <input
-          type="file"
-          name="Asset"
-          className="my-4 rounded"
-          onChange={onChange}
-        />
+
+        <label className="text-center mb-1 bg-white9 rounded-xl" htmlFor="type">
+          Choose a type of photo:
+        </label>
+        <div className="inline-block relative mb-4">
+          <select
+            onChange={(e) =>
+              updateFormInput({ ...formInput, type: e.target.value })
+            }
+            id="type"
+            className="block appearance-none w-full bg-white  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option>Abstract</option>
+            <option>Aerial</option>
+            <option>Annimals</option>
+            <option>Architecture</option>
+            <option>Astrophotography</option>
+            <option>Culinary</option>
+            <option>Landscapes</option>
+            <option>Street</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="m-auto mb-4">
+          <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-xl shadow-lg tracking-wide uppercase cursor-pointer duration-200 hover:bg-blue hover:text-white">
+            <svg
+              className="w-8 h-8"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+            </svg>
+            <span className="mt-2 text-base leading-normal">Select a file</span>
+            <input
+              type="file"
+              className="hidden"
+              name="Asset"
+              onChange={onChange}
+            />
+          </label>
+        </div>
 
         {uploadProg !== 100 && (
           <div className="transition-all ease-out duration-1000">
@@ -135,18 +194,27 @@ export default function CreateItem() {
         {fileUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            className="rounded mt-4 align-middle m-auto"
+            className="rounded mt-4 align-middle m-auto duration-200"
             width="350"
             src={fileUrl}
             alt="img"
           />
         )}
-        <button
-          onClick={createMarket}
-          className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green"
-        >
-          Create Digital Asset
-        </button>
+        {uploadStatus ? (
+          <button
+            onClick={createMarket}
+            className="h-20 font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg "
+          >
+            <Image src={Loader} alt="loader" height="50px" />
+          </button>
+        ) : (
+          <button
+            onClick={createMarket}
+            className="h-20 font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green"
+          >
+            Create digital assest
+          </button>
+        )}
       </div>
     </div>
   );

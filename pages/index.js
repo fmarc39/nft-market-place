@@ -5,6 +5,8 @@ import axios from "axios";
 import Web3Modal from "web3modal";
 import LoadingLogo from "../public/assets/logo/Blocks-1s-200px.svg";
 import Image from "next/image";
+import Box from "../public/assets/logo/box.svg";
+import Link from "next/link";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
@@ -22,7 +24,7 @@ export default function Home() {
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://polygon-mumbai.infura.io/v3/0bde4451fec140b0b6908eb541d38ea9"
+      "https://polygon-mumbai.infura.io/v3/c2098e08d3b441f2b7c3b280520d8471"
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
@@ -44,8 +46,10 @@ export default function Home() {
           owner: i.owner,
           image: meta.data.image,
           name: meta.data.name,
+          type: meta.data.type,
           description: meta.data.description,
         };
+        console.log(item);
         return item;
       })
     );
@@ -70,8 +74,29 @@ export default function Home() {
     await transaction.wait();
     loadNFTs();
   }
+
+  function tagColors(tagName) {
+    switch (tagName) {
+      case "Annimals":
+        return "black";
+      default:
+        return "blue";
+    }
+  }
   if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
+    return (
+      <div className="flex flex-col justify-center items-center p-8 m-auto bg-white9 w-80 rounded-xl text-center">
+        <h1 className="text-2xl font-bold text-black mb-4">
+          No items in marketplace
+        </h1>
+        <Link href="/create-item">
+          <button className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green mb-4">
+            Create an Nft
+          </button>
+        </Link>
+        <Image src={Box} alt="box-logo" height={150} width={150} />
+      </div>
+    );
   if (loadingState === "not-loaded")
     return (
       <div className="flex justify-center items-center h-screen">
@@ -85,48 +110,58 @@ export default function Home() {
         style={{ maxWidth: "1600px" }}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
-          {nfts.map((nft, i) => (
-            <div key={i} className="rounded-xl overflow-hidden mb-8">
-              {
-                <img
-                  src={nft.image}
-                  alt={nft.name}
-                  async
-                  lazy="true"
-                  onLoad={() => {
-                    setLoadPhoto(true);
-                  }}
-                  className={
-                    loadPhoto
-                      ? "transform transition duration-500 hover:scale-105 cursor-pointer"
-                      : "hidden"
-                  }
-                />
-              }
-              <div className="p-4 bg-white9">
-                <p
-                  style={{ height: "64px" }}
-                  className="text-2xl font-semibold text-center"
-                >
-                  {nft.name}
-                </p>
-                <div style={{ height: "70px", overflow: "hidden" }}>
-                  <p className="text-gray-400">{nft.description}</p>
+          {nfts.map((nft, i) => {
+            const color = tagColors(nft.type);
+            console.log(color);
+            return (
+              <div key={i} className="rounded-xl overflow-hidden mb-8 relative">
+                {
+                  <img
+                    src={nft.image}
+                    alt={nft.name}
+                    async
+                    lazy="true"
+                    onLoad={() => {
+                      setLoadPhoto(true);
+                    }}
+                    className={
+                      loadPhoto
+                        ? "transform transition duration-500 hover:scale-105 cursor-pointer"
+                        : "hidden"
+                    }
+                  />
+                }
+
+                <div className="p-4 bg-white9">
+                  <p
+                    style={{ height: "64px" }}
+                    className="text-2xl font-semibold text-center"
+                  >
+                    {nft.name}
+                  </p>
+
+                  <p className="absolute top-2 right-2 text-sm inline-block bg-lightBlue p-2 shadow-lg rounded-2xl font-semibold">
+                    {nft.type}
+                  </p>
+
+                  <div style={{ height: "70px", overflow: "hidden" }}>
+                    <p className="text-gray-400">{nft.description}</p>
+                  </div>
+                </div>
+                <div className="p-4 bg-white">
+                  <p className="text-2xl mb-4 font-bold text-black">
+                    {nft.price} Matic
+                  </p>
+                  <button
+                    className="w-full bg-blue text-white font-bold py-2 px-12 rounded duration-200 hover:bg-green"
+                    onClick={() => buyNft(nft)}
+                  >
+                    Buy
+                  </button>
                 </div>
               </div>
-              <div className="p-4 bg-white">
-                <p className="text-2xl mb-4 font-bold text-black">
-                  {nft.price} Matic
-                </p>
-                <button
-                  className="w-full bg-blue text-white font-bold py-2 px-12 rounded duration-200 hover:bg-green"
-                  onClick={() => buyNft(nft)}
-                >
-                  Buy
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
