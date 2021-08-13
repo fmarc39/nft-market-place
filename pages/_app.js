@@ -62,7 +62,12 @@ function MyApp({ Component, pageProps }) {
       // ChainId
       const chainId = await ethereum.request({ method: "eth_chainId" });
       const chainName = networkName(chainId);
-
+      console.log(chainId, chainName);
+      setInitialState({
+        ...initialState,
+        networkId: chainId,
+        networkName: chainName,
+      });
       // UserAddress
       ethereum
         .request({ method: "eth_accounts" })
@@ -88,13 +93,13 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <div className=" font-roboto min-h-screen bg-bg-img  bg-no-repea bg-cover t bg-fixed no-re relative">
-      <nav className="p-10 text-w flex justify-center text-1xl text-white items-center mb-6">
-        <div className="mr-10 absolute top-6 left-6">
-          <Image src={Logo} alt="logo" height={80} width={80} />
+      <nav className="p-6  shadow-xl bg-blue4 text-w flex justify-left text-lg text-white items-center mb-6">
+        <div className="mr-10">
+          <Image src={Logo} alt="logo" height={70} width={70} />
         </div>
         {initialState.userAdress ? (
-          <div className="absolute top-10 right-6 flex justify-center items-center bg-blue p-2 rounded-xl">
-            <p className="text-white font-bold rounded-xl mr-4 bg-white1 p-1 hover:bg-white5 cursor-pointer">
+          <div className="absolute  top-10 right-6 flex justify-center text-base items-center bg-white text-black p-2 rounded-xl">
+            <p className="text-black font-bold rounded-xl mr-4 bg-white1 p-1 duration-200 hover:bg-blue  hover:text-white cursor-pointer">
               {initialState.userAdress}
             </p>
             <p className="mr-4">{initialState.balance}</p>
@@ -103,32 +108,32 @@ function MyApp({ Component, pageProps }) {
         ) : (
           <button
             onClick={() => walletConnect()}
-            className="text-white bg-blue text-bold p-2 rounded-xl absolute top-10 right-6"
+            className="text-white  bg-blue text-bold p-2 rounded-xl absolute top-10 right-6"
           >
             Connexion
           </button>
         )}
         <Link href="/">
-          <a className="mr-12 flex items-center duration-200 hover:text-green">
+          <a className="mr-10 flex items-center duration-200 hover:text-green">
             <div className="mr-3">
-              <Image src={HomeLogo} alt="homepageLogo" height={40} width={40} />
+              <Image src={HomeLogo} alt="homepageLogo" height={35} width={35} />
             </div>
             Home
           </a>
         </Link>
         <Link href="/create-item">
-          <a className="mr-12 flex items-center duration-200 hover:text-green">
+          <a className="mr-10 flex items-center duration-200 hover:text-green">
             <div className="mr-3">
-              <Image src={Sell} alt="homepageLogo" height={40} width={40} />
+              <Image src={Sell} alt="homepageLogo" height={35} width={35} />
             </div>
             Sell Digital Asset
           </a>
         </Link>
         <Link href="/my-assets">
-          <a className="mr-12 flex items-center duration-200 hover:text-green">
+          <a className="mr-10 flex items-center duration-200 hover:text-green">
             {" "}
             <div className="mr-3">
-              <Image src={Chest} alt="homepageLogo" height={40} width={40} />
+              <Image src={Chest} alt="homepageLogo" height={35} width={35} />
             </div>
             My digital assets
           </a>
@@ -140,8 +145,8 @@ function MyApp({ Component, pageProps }) {
               <Image
                 src={Dashboard}
                 alt="Dashboard-Logo"
-                height={40}
-                width={40}
+                height={35}
+                width={35}
               />
             </div>
             Creator Dashboard

@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import CameraLogo from "../public/assets/logo/photo-camera-interface-symbol-for-button.svg";
 
 import { nftmarketaddress, nftaddress } from "../config";
 
@@ -60,7 +62,11 @@ export default function CreatorDashboard() {
   return (
     <div>
       <div className="p-4">
-        <h2 className="text-3xl py-2 text-center text-white">Items Created</h2>
+        <div className="flex justify-center">
+          <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-blue inline-block  text-center text-white">
+            Items Created
+          </h2>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-32">
           {nfts.map((nft, i) => (
             <div key={i} className="shadow rounded-xl overflow-hidden">
@@ -74,8 +80,13 @@ export default function CreatorDashboard() {
       </div>
       <div className="px-4">
         {Boolean(sold.length) && (
-          <div>
-            <h2 className="text-2xl py-2">Items sold</h2>
+          <div className="pb-36">
+            <div className="flex justify-center">
+              <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-blue inline-block  text-center text-white">
+                Items sold
+              </h2>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {sold.map((nft, i) => (
                 <div key={i} className="shadow rounded-xl overflow-hidden">

@@ -78,7 +78,21 @@ export default function Home() {
   function tagColors(tagName) {
     switch (tagName) {
       case "Annimals":
-        return "black";
+        return "annimals";
+      case "Abstract":
+        return "abstract";
+      case "Aerial":
+        return "aerial";
+      case "Architecture":
+        return "architecture";
+      case "Astrophotography":
+        return "astrophotography";
+      case "Culinary":
+        return "culinary";
+      case "Landscapes":
+        return "landscapes";
+      case "Street":
+        return "street  ";
       default:
         return "blue";
     }
@@ -140,7 +154,9 @@ export default function Home() {
                     {nft.name}
                   </p>
 
-                  <p className="absolute top-2 right-2 text-sm inline-block bg-lightBlue p-2 shadow-lg rounded-2xl font-semibold">
+                  <p
+                    className={`absolute top-2 right-2 text-white text-sm inline-block bg-${color} p-2 shadow-lg rounded-2xl font-semibold`}
+                  >
                     {nft.type}
                   </p>
 

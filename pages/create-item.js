@@ -15,11 +15,12 @@ const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState(false);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
     description: "",
-    type: "",
+    type: "Abstract",
   });
   const [uploadProg, setUploadProg] = useState(0);
   const router = useRouter();
@@ -66,6 +67,7 @@ export default function CreateItem() {
   }
 
   async function createSale(url) {
+    setUploadStatus(true);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -90,11 +92,12 @@ export default function CreateItem() {
       value: listingPrice,
     });
     await transaction.wait();
+    setUploadStatus(false);
     router.push("/");
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center duration-200">
       <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl mb-32">
         <input
           placeholder="Photo Name"
@@ -120,8 +123,11 @@ export default function CreateItem() {
           }
         />
 
-        <label className="text-center mb-1 bg-white9 rounded-xl" htmlFor="type">
-          Choose a type of photo:
+        <label
+          className="mb-4 bg-blue text-white shadow-xl p-2 inline-block w-38 m-auto rounded-xl text-left"
+          htmlFor="type"
+        >
+          Choose a type of photo
         </label>
         <div className="inline-block relative mb-4">
           <select
@@ -139,6 +145,7 @@ export default function CreateItem() {
             <option>Culinary</option>
             <option>Landscapes</option>
             <option>Street</option>
+            <option>Other</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg
@@ -182,11 +189,7 @@ export default function CreateItem() {
                       ? "bg-red rounded-lg transition-all ease-out duration-1000"
                       : "bg-green rounded-lg transition-all ease-out duration-1000"
                   }`}
-                >
-                  {uploadProg > 5 && (
-                    <p className="text-center">{uploadProg} %</p>
-                  )}
-                </div>
+                ></div>
               </div>
             )}
           </div>
