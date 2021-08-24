@@ -118,7 +118,7 @@ export default function Home() {
       </div>
     );
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col justify-center">
       <div
         className="px-4 mb- flex justify-evenly"
         style={{ maxWidth: "1600px" }}

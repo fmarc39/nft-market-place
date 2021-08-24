@@ -23,6 +23,7 @@ module.exports = {
       white1: "rgb(255, 255, 255, 0.2)",
       white: "#FFF",
       black: "#000",
+      grey: "#f2e9e4",
       // tags
       abstract: "#f382ab",
       aerial: "#08e6ff",

@@ -63,11 +63,11 @@ export default function CreatorDashboard() {
     <div>
       <div className="p-4">
         <div className="flex justify-center">
-          <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-blue inline-block  text-center text-white">
+          <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-white inline-block  text-center text-blue border border-lightBlue">
             Items Created
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-32">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
           {nfts.map((nft, i) => (
             <div key={i} className="shadow rounded-xl overflow-hidden">
               <img src={nft.image} className="rounded" alt="img" />
@@ -82,7 +82,7 @@ export default function CreatorDashboard() {
         {Boolean(sold.length) && (
           <div className="pb-36">
             <div className="flex justify-center">
-              <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-blue inline-block  text-center text-white">
+              <h2 className="text-3xl mb-6 p-4 rounded-full align-middle bg-white inline-block  text-center text-blue border border-lightBlue">
                 Items sold
               </h2>
             </div>

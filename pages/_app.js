@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Logo from "../public/assets/logo/shutter.svg";
 import Image from "next/image";
 import HomeLogo from "../public/assets/logo/homepage.svg";
@@ -26,6 +27,7 @@ function networkName(networkId) {
 }
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   // Initiale state of the app
   const [initialState, setInitialState] = useState({
     userAdress: "",
@@ -59,10 +61,41 @@ function MyApp({ Component, pageProps }) {
         console.error("Do you have multiple wallets installed?");
       }
 
+      // Auto switch network
+      try {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x13881" }],
+        });
+      } catch (switchError) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (error.code === 4902) {
+          try {
+            await ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{ chainId: "0x13881", rpcUrl: "https://..." /* ... */ }],
+            });
+          } catch (addError) {
+            // handle "add" error
+          }
+        }
+        // handle other "switch" errors
+      }
+
+      // On Chain Change
+      ethereum.on("chainChanged", (chainId) => {
+        window.location.reload();
+      });
+
+      // On chain Acount Change
+
+      ethereum.on("accountsChanged", (accounts) => {
+        window.location.reload();
+      });
+
       // ChainId
       const chainId = await ethereum.request({ method: "eth_chainId" });
       const chainName = networkName(chainId);
-      console.log(chainId, chainName);
       setInitialState({
         ...initialState,
         networkId: chainId,
@@ -114,7 +147,13 @@ function MyApp({ Component, pageProps }) {
           </button>
         )}
         <Link href="/">
-          <a className="mr-10 flex items-center duration-200 hover:text-green">
+          <a
+            className={
+              router.pathname === "/"
+                ? "mr-10 flex items-center duration-200 bg-white1 shadow-xl rounded-xl p-3"
+                : "mr-10 flex items-center duration-200 hover:text-grey p-1"
+            }
+          >
             <div className="mr-3">
               <Image src={HomeLogo} alt="homepageLogo" height={35} width={35} />
             </div>
@@ -122,7 +161,13 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/create-item">
-          <a className="mr-10 flex items-center duration-200 hover:text-green">
+          <a
+            className={
+              router.pathname === "/create-item"
+                ? "mr-10 flex items-center duration-200 bg-white1 shadow-xl rounded-xl p-3"
+                : "mr-10 flex items-center duration-200 hover:text-grey p-1"
+            }
+          >
             <div className="mr-3">
               <Image src={Sell} alt="homepageLogo" height={35} width={35} />
             </div>
@@ -130,8 +175,13 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/my-assets">
-          <a className="mr-10 flex items-center duration-200 hover:text-green">
-            {" "}
+          <a
+            className={
+              router.pathname === "/my-assets"
+                ? "mr-10 flex items-center duration-200 bg-white1 shadow-xl rounded-xl p-3"
+                : "mr-10 flex items-center duration-200 hover:text-grey p-1"
+            }
+          >
             <div className="mr-3">
               <Image src={Chest} alt="homepageLogo" height={35} width={35} />
             </div>
@@ -139,8 +189,13 @@ function MyApp({ Component, pageProps }) {
           </a>
         </Link>
         <Link href="/creator-dashboard">
-          <a className="flex items-center duration-200 hover:text-green">
-            {" "}
+          <a
+            className={
+              router.pathname === "/creator-dashboard"
+                ? "mr-10 flex items-center duration-200 bg-white1 text-grey shadow-xl rounded-xl p-3"
+                : "mr-10 flex items-center duration-200 hover:text-grey p-1"
+            }
+          >
             <div className="mr-3">
               <Image
                 src={Dashboard}
