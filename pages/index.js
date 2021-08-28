@@ -3,11 +3,10 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
-import LoadingLogo from "../public/assets/logo/Blocks-1s-200px.svg";
+import LoadingLogo from "../public/assets/logo/circles.svg";
 import Image from "next/image";
 import Box from "../public/assets/logo/box.svg";
 import Link from "next/link";
-
 import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
@@ -16,7 +15,10 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const [loadPhoto, setLoadPhoto] = useState(false);
+
+  const myLoader = ({ src, width, quality }) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
 
   useEffect(() => {
     loadNFTs();
@@ -49,7 +51,6 @@ export default function Home() {
           type: meta.data.type,
           description: meta.data.description,
         };
-        console.log(item);
         return item;
       })
     );
@@ -114,7 +115,7 @@ export default function Home() {
   if (loadingState === "not-loaded")
     return (
       <div className="flex justify-center items-center h-screen">
-        <Image src={LoadingLogo} alt="loading-logo" height={200} width={200} />
+        <Image src={LoadingLogo} alt="loading-logo" height={150} width={150} />
       </div>
     );
   return (
@@ -126,24 +127,30 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
           {nfts.map((nft, i) => {
             const color = tagColors(nft.type);
-            console.log(color);
+
             return (
               <div key={i} className="rounded-xl overflow-hidden mb-8 relative">
                 {
-                  <img
-                    src={nft.image}
-                    alt={nft.name}
-                    async
-                    lazy="true"
-                    onLoad={() => {
-                      setLoadPhoto(true);
+                  // eslint-disable-next-line @next/next/link-passhref
+                  <Link
+                    href={{
+                      pathname: "/item-page",
+                      query: { tokenId: nft.tokenId },
                     }}
-                    className={
-                      loadPhoto
-                        ? "transform transition duration-500 hover:scale-105 cursor-pointer"
-                        : "hidden"
-                    }
-                  />
+                  >
+                    <div className="relative -mb-2 cursor-pointer">
+                      <Image
+                        placeholder="blur"
+                        blurDataURL={nft.image}
+                        src={nft.image}
+                        alt={nft.name}
+                        height={1100}
+                        width={1500}
+                        quality={40}
+                        objectFit="cover"
+                      />
+                    </div>
+                  </Link>
                 }
 
                 <div className="p-4 bg-white9">
@@ -155,7 +162,7 @@ export default function Home() {
                   </p>
 
                   <p
-                    className={`absolute top-2 right-2 text-white text-sm inline-block bg-${color} p-2 shadow-lg rounded-2xl font-semibold`}
+                    className={`absolute top-2 right-2 text-white text-sm inline-block bg-${color} p-2 shadow-2xl rounded-2xl font-semibold`}
                   >
                     {nft.type}
                   </p>

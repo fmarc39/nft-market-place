@@ -3,6 +3,10 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import Image from "next/image";
+import LoadingLogo from "../public/assets/logo/circles.svg";
+import Link from "next/link";
+import Box from "../public/assets/logo/box.svg";
 
 import { nftmarketaddress, nftaddress } from "../config";
 
@@ -51,14 +55,41 @@ export default function MyAssets() {
     setLoadingState("loaded");
   }
   if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No assets owned</h1>;
+    return (
+      <div className="flex flex-col justify-center items-center p-8 m-auto bg-white9 w-80 rounded-xl text-center">
+        <h1 className="text-2xl font-bold text-black mb-4">No items owns</h1>
+        <Link href="/create-item">
+          <button className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green mb-4">
+            Create an Nft
+          </button>
+        </Link>
+        <Image src={Box} alt="box-logo" height={150} width={150} />
+      </div>
+    );
+  if (loadingState === "not-loaded")
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={LoadingLogo} alt="loading-logo" height={150} width={150} />
+      </div>
+    );
   return (
     <div className="flex justify-center">
       <div className="p-4 mb-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {nfts.map((nft, i) => (
             <div key={i} className="shadow rounded-xl overflow-hidden">
-              <img src={nft.image} className="rounded" alt="img" />
+              <div className="relative -mb-2 cursor-pointer">
+                <Image
+                  placeholder="blur"
+                  blurDataURL={nft.image}
+                  src={nft.image}
+                  alt={nft.name}
+                  height={800}
+                  width={600}
+                  quality={40}
+                  objectFit="cover"
+                />
+              </div>
               <div className="p-4 bg-white">
                 <p className="text-2xl font-bold">Price - {nft.price} Matic</p>
               </div>

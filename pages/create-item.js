@@ -20,6 +20,7 @@ export default function CreateItem() {
     price: "",
     name: "",
     description: "",
+    creator: "",
     type: "Abstract",
   });
   const [uploadProg, setUploadProg] = useState(0);
@@ -46,7 +47,7 @@ export default function CreateItem() {
     }
   }
   async function createMarket() {
-    const { name, description, price, type } = formInput;
+    const { name, description, price, type, creator } = formInput;
     console.log(type);
     if (!name || !description || !price || !fileUrl || !type) return;
     /* first, upload to IPFS */
@@ -54,6 +55,7 @@ export default function CreateItem() {
       name,
       description,
       type,
+      creator,
       image: fileUrl,
     });
     try {
@@ -100,21 +102,28 @@ export default function CreateItem() {
     <div className="flex justify-center duration-200">
       <div className="w-1/2 flex  flex-col pb-12 bg-white5 p-4 rounded-2xl mb-32">
         <input
-          placeholder="Photo Name"
+          placeholder="Photo Name *"
           className="mt-8 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
         <textarea
-          placeholder="Photo Description"
+          placeholder="Photo Description *"
           className="mt-2 rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
         <input
-          placeholder="Photo Price in Matic"
+          placeholder="Creator Name"
+          className="mt-2 rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, creator: e.target.value })
+          }
+        />
+        <input
+          placeholder="Photo Price in Matic *"
           type="number"
           required="required"
           className="mt-2 rounded p-4 mb-4"
@@ -181,7 +190,7 @@ export default function CreateItem() {
         {uploadProg !== 100 && (
           <div className="transition-all ease-out duration-1000">
             {uploadProg !== 0 && (
-              <div className="h-5 w-full bg-white rounded-lg">
+              <div className="h-3 w-full bg-white rounded-lg">
                 <div
                   style={{ width: `${uploadProg}%` }}
                   className={`h-full ${
@@ -208,7 +217,7 @@ export default function CreateItem() {
             onClick={createMarket}
             className="h-20 font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg "
           >
-            <Image src={Loader} alt="loader" height="50px" />
+            <Image src={Loader} alt="loader" height="50px" width="50px" />
           </button>
         ) : (
           <button

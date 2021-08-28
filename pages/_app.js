@@ -6,6 +6,8 @@ import Image from "next/image";
 import HomeLogo from "../public/assets/logo/homepage.svg";
 import Dashboard from "../public/assets/logo/dashboard.svg";
 import Chest from "../public/assets/logo/open-book.svg";
+import LogoutLogo from "../public/assets/logo/logout (1).svg";
+import Inline from "../public/assets/logo/rec.svg";
 import Web3Modal from "web3modal";
 import Web3 from "web3";
 import { useEffect, useState } from "react";
@@ -31,6 +33,7 @@ function MyApp({ Component, pageProps }) {
   // Initiale state of the app
   const [initialState, setInitialState] = useState({
     userAdress: "",
+    fullAddress: "",
     loged: false,
     networkId: "",
     networkName: "",
@@ -43,6 +46,17 @@ function MyApp({ Component, pageProps }) {
 
   async function walletConnect() {
     ethereum.request({ method: "eth_requestAccounts" });
+  }
+
+  async function openModal() {
+    const permissions = await ethereum.request({
+      method: "wallet_requestPermissions",
+      params: [
+        {
+          eth_accounts: {},
+        },
+      ],
+    });
   }
 
   async function getUserInfos() {
@@ -73,7 +87,13 @@ function MyApp({ Component, pageProps }) {
           try {
             await ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [{ chainId: "0x13881", rpcUrl: "https://..." /* ... */ }],
+              params: [
+                {
+                  chainId: "0x13881",
+                  rpcUrl:
+                    "https://polygon-mumbai.infura.io/v3/c2098e08d3b441f2b7c3b280520d8471",
+                },
+              ],
             });
           } catch (addError) {
             // handle "add" error
@@ -81,6 +101,19 @@ function MyApp({ Component, pageProps }) {
         }
         // handle other "switch" errors
       }
+
+      // Web3 GetBalance
+      const web3 = new Web3(window.ethereum);
+      let accounts = await web3.eth.getAccounts();
+      let account = accounts[0];
+
+      if (!account) {
+        return null;
+      }
+
+      let balance = await web3.eth.getBalance(account);
+      balance = web3.utils.fromWei(balance, "ether");
+      balance = Number(balance);
 
       // On Chain Change
       ethereum.on("chainChanged", (chainId) => {
@@ -114,13 +147,13 @@ function MyApp({ Component, pageProps }) {
             userAdress: fullAddress,
             networkId: chainId,
             networkName: chainName,
+            fullAddress: address,
+            balance: `${balance.toFixed(2)} Matic`,
           });
         })
         .catch((err) => {
           console.error(err);
         });
-
-      // UserBalance
     }
   }
 
@@ -131,12 +164,34 @@ function MyApp({ Component, pageProps }) {
           <Image src={Logo} alt="logo" height={70} width={70} />
         </div>
         {initialState.userAdress ? (
-          <div className="absolute  top-10 right-6 flex justify-center text-base items-center bg-white text-black p-2 rounded-xl">
-            <p className="text-black font-bold rounded-xl mr-4 bg-white1 p-1 duration-200 hover:bg-blue  hover:text-white cursor-pointer">
-              {initialState.userAdress}
-            </p>
-            <p className="mr-4">{initialState.balance}</p>
-            <p className="mr-4">{networkName(initialState.networkId)}</p>
+          <div className="absolute p-2  top-6 right-6 flex-col flex justify-center text-base items-center bg-white1 text-white rounded-xl shadow-lg">
+            <div className="flex justify-center items-center">
+              <p className="font-bold rounded-xl mr-4 p-1">
+                {initialState.userAdress}
+              </p>
+              <div className="absolute top-2 right-2">
+                <Image
+                  src={LogoutLogo}
+                  alt="logout-logo"
+                  height={20}
+                  width={20}
+                  onClick={() => openModal()}
+                />
+              </div>
+              <div className="absolute -top-1.5 -right-1.5">
+                <Image
+                  src={Inline}
+                  alt="logout-logo"
+                  height={15}
+                  width={15}
+                  onClick={() => openModal()}
+                />
+              </div>
+            </div>
+            <div className="flex justify-center items-center">
+              <p className="mr-4">{initialState.balance}</p>
+              <p className="mr-4">{networkName(initialState.networkId)}</p>
+            </div>
           </div>
         ) : (
           <button
