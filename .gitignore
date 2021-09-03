@@ -37,7 +37,7 @@ node_modules
 
 #Hardhat files
 cache
-artifacts
+; artifacts
 
 #Env Vars
 .secret
