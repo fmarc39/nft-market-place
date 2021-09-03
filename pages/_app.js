@@ -6,14 +6,13 @@ import Image from "next/image";
 import HomeLogo from "../public/assets/logo/homepage.svg";
 import Dashboard from "../public/assets/logo/dashboard.svg";
 import Chest from "../public/assets/logo/open-book.svg";
-import LogoutLogo from "../public/assets/logo/logout (1).svg";
+import LogoutLogo from "../public/assets/logo/swap.svg";
 import Inline from "../public/assets/logo/rec.svg";
 import Web3Modal from "web3modal";
 import Web3 from "web3";
 import { useEffect, useState } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Sell from "../public/assets/logo/dollar-symbol.svg";
-import { ethers } from "ethers";
 
 function networkName(networkId) {
   switch (networkId) {
@@ -45,7 +44,8 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   async function walletConnect() {
-    ethereum.request({ method: "eth_requestAccounts" });
+    await ethereum.request({ method: "eth_requestAccounts" });
+    getUserInfos();
   }
 
   async function openModal() {
@@ -126,6 +126,11 @@ function MyApp({ Component, pageProps }) {
         window.location.reload();
       });
 
+      // On connect
+      ethereum.on("connect", (ConnectInfo) => {
+        window.location.reload();
+      });
+
       // ChainId
       const chainId = await ethereum.request({ method: "eth_chainId" });
       const chainName = networkName(chainId);
@@ -169,23 +174,17 @@ function MyApp({ Component, pageProps }) {
               <p className="font-bold rounded-xl mr-4 p-1">
                 {initialState.userAdress}
               </p>
-              <div className="absolute top-2 right-2">
+              <div className="absolute top-2 right-2 cursor-pointe">
                 <Image
                   src={LogoutLogo}
                   alt="logout-logo"
-                  height={20}
-                  width={20}
+                  height={22}
+                  width={22}
                   onClick={() => openModal()}
                 />
               </div>
               <div className="absolute -top-1.5 -right-1.5">
-                <Image
-                  src={Inline}
-                  alt="logout-logo"
-                  height={15}
-                  width={15}
-                  onClick={() => openModal()}
-                />
+                <Image src={Inline} alt="online-logo" height={15} width={15} />
               </div>
             </div>
             <div className="flex justify-center items-center">

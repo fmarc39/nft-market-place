@@ -8,6 +8,7 @@ import Image from "next/image";
 import Box from "../public/assets/logo/box.svg";
 import Link from "next/link";
 import { nftaddress, nftmarketaddress } from "../config";
+import { InView } from "react-intersection-observer";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
@@ -16,13 +17,12 @@ export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
 
-  const myLoader = ({ src, width, quality }) => {
-    return `${src}?w=${width}&q=${quality || 75}`;
-  };
-
   useEffect(() => {
     loadNFTs();
   }, []);
+
+  // Seuil de déclanchement de l'intersection observer
+  const threshold = 0.2;
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -127,62 +127,75 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
           {nfts.map((nft, i) => {
             const color = tagColors(nft.type);
+            console.log(nft);
 
             return (
-              <div key={i} className="rounded-xl overflow-hidden mb-8 relative">
-                {
-                  // eslint-disable-next-line @next/next/link-passhref
-                  <Link
-                    href={{
-                      pathname: "/item-page",
-                      query: { tokenId: nft.tokenId },
-                    }}
+              <InView key={i} triggerOnce={true} threshold={threshold}>
+                {({ inView, ref }) => (
+                  <div
+                    key={i}
+                    ref={ref}
+                    className={
+                      inView
+                        ? "overflow-hidden mb-8 duration-500 relative rounded-t-xl translate-y-0 opacity-100"
+                        : "transition transform duration-500 opacity-0 translate-y-12"
+                    }
                   >
-                    <div className="relative -mb-2 cursor-pointer">
-                      <Image
-                        placeholder="blur"
-                        blurDataURL={nft.image}
-                        src={nft.image}
-                        alt={nft.name}
-                        height={1100}
-                        width={1500}
-                        quality={40}
-                        objectFit="cover"
-                      />
+                    {
+                      // eslint-disable-next-line @next/next/link-passhref
+                      <Link
+                        href={{
+                          pathname: "/item-page",
+                          query: { tokenId: nft.tokenId },
+                        }}
+                      >
+                        <div className="relative -mb-2 cursor-pointer">
+                          <Image
+                            placeholder="blur"
+                            blurDataURL={nft.image}
+                            src={nft.image}
+                            alt={nft.name}
+                            height={1100}
+                            width={1500}
+                            quality={40}
+                            objectFit="cover"
+                          />
+                        </div>
+                      </Link>
+                    }
+
+                    <div className="p-4 bg-white9">
+                      <p
+                        style={{ height: "64px" }}
+                        className="text-2xl font-semibold text-center"
+                      >
+                        {nft.name}
+                      </p>
+
+                      <p
+                        className={`absolute top-2 right-2 text-white text-sm inline-block bg-${color} p-2 shadow-2xl rounded-2xl font-semibold`}
+                      >
+                        {nft.type}
+                      </p>
+
+                      <div style={{ height: "70px", overflow: "hidden" }}>
+                        <p className="text-gray-400">{nft.description}</p>
+                      </div>
                     </div>
-                  </Link>
-                }
-
-                <div className="p-4 bg-white9">
-                  <p
-                    style={{ height: "64px" }}
-                    className="text-2xl font-semibold text-center"
-                  >
-                    {nft.name}
-                  </p>
-
-                  <p
-                    className={`absolute top-2 right-2 text-white text-sm inline-block bg-${color} p-2 shadow-2xl rounded-2xl font-semibold`}
-                  >
-                    {nft.type}
-                  </p>
-
-                  <div style={{ height: "70px", overflow: "hidden" }}>
-                    <p className="text-gray-400">{nft.description}</p>
+                    <div className="p-4 bg-white">
+                      <p className="text-2xl mb-4 font-bold text-black">
+                        {nft.price} Matic
+                      </p>
+                      <button
+                        className="w-full bg-blue text-white font-bold py-2 px-12 rounded duration-200 hover:bg-green"
+                        onClick={() => buyNft(nft)}
+                      >
+                        Buy
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 bg-white">
-                  <p className="text-2xl mb-4 font-bold text-black">
-                    {nft.price} Matic
-                  </p>
-                  <button
-                    className="w-full bg-blue text-white font-bold py-2 px-12 rounded duration-200 hover:bg-green"
-                    onClick={() => buyNft(nft)}
-                  >
-                    Buy
-                  </button>
-                </div>
-              </div>
+                )}
+              </InView>
             );
           })}
         </div>
