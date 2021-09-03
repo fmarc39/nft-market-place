@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     getUserInfos();
-  }, []);
+  });
 
   async function walletConnect() {
     await ethereum.request({ method: "eth_requestAccounts" });

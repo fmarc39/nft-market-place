@@ -104,7 +104,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-black mb-4">
           No items in marketplace
         </h1>
-        <Link href="/create-item">
+        <Link passHref href="/create-item">
           <button className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green mb-4">
             Create an Nft
           </button>

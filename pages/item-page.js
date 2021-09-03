@@ -17,7 +17,7 @@ export default function ItemPage() {
   const [loadPhoto, setLoadPhoto] = useState(false);
   useEffect(() => {
     loadNFTs();
-  }, []);
+  });
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -72,7 +72,7 @@ export default function ItemPage() {
           {
             // eslint-disable-next-line @next/next/link-passhref
 
-            <Image src={nft.image} alt={nft.name} lazy="true" />
+            <img src={nft.image} alt={nft.name} />
           }
 
           <div className="p-4 bg-white9">
