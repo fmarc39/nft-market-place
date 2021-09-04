@@ -26,7 +26,7 @@ export default function Home() {
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://polygon-mumbai.infura.io/v3/c2098e08d3b441f2b7c3b280520d8471"
+      "https://polygon-mumbai.infura.io/v3/a80e50b776284c9aab8f35a92a730008"
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
@@ -127,8 +127,6 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
           {nfts.map((nft, i) => {
             const color = tagColors(nft.type);
-            console.log(nft);
-
             return (
               <InView key={i} triggerOnce={true} threshold={threshold}>
                 {({ inView, ref }) => (

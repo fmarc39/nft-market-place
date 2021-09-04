@@ -8,7 +8,6 @@ import Dashboard from "../public/assets/logo/dashboard.svg";
 import Chest from "../public/assets/logo/open-book.svg";
 import LogoutLogo from "../public/assets/logo/swap.svg";
 import Inline from "../public/assets/logo/rec.svg";
-import Web3Modal from "web3modal";
 import Web3 from "web3";
 import { useEffect, useState } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -41,7 +40,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     getUserInfos();
-  });
+  }, []);
 
   async function walletConnect() {
     await ethereum.request({ method: "eth_requestAccounts" });
@@ -91,7 +90,7 @@ function MyApp({ Component, pageProps }) {
                 {
                   chainId: "0x13881",
                   rpcUrl:
-                    "https://polygon-mumbai.infura.io/v3/c2098e08d3b441f2b7c3b280520d8471",
+                    "https://polygon-mumbai.infura.io/v3/a80e50b776284c9aab8f35a92a730008",
                 },
               ],
             });

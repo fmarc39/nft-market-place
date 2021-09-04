@@ -18,7 +18,7 @@ export default function MyAssets() {
   const [loadingState, setLoadingState] = useState("not-loaded");
   useEffect(() => {
     loadNFTs();
-  }, []);
+  }, [nfts, loadingState]);
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
       network: "mainnet",
@@ -76,7 +76,7 @@ export default function MyAssets() {
     <div className="flex justify-center">
       <div className="p-4 mb-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
+          {nfts.map((nft, i) => {
             <div key={i} className="shadow rounded-xl overflow-hidden">
               <div className="relative -mb-2 cursor-pointer">
                 <Image
@@ -93,8 +93,8 @@ export default function MyAssets() {
               <div className="p-4 bg-white">
                 <p className="text-2xl font-bold">Price - {nft.price} Matic</p>
               </div>
-            </div>
-          ))}
+            </div>;
+          })}
         </div>
       </div>
     </div>

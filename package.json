@@ -14,6 +14,7 @@
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.2.0",
+    "@truffle/hdwallet-provider": "^1.2.3",
     "@use-hooks/image-size": "^1.0.5",
     "@walletconnect/web3-provider": "^1.5.2",
     "@zeit/next-sass": "^1.0.1",

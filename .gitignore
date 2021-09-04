@@ -42,4 +42,3 @@ cache
 #Env Vars
 .secret
 .infuraid
-config.js

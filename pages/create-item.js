@@ -8,7 +8,6 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { nftaddress, nftmarketaddress } from "../config";
 import Loader from "../public/assets/logo/Double Ring-1s-200px (1).svg";
 import Image from "next/image";
-import { options } from "colorette";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
