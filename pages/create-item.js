@@ -8,14 +8,15 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { nftaddress, nftmarketaddress } from "../config";
 import Loader from "../public/assets/logo/Double Ring-1s-200px (1).svg";
 import Image from "next/image";
-import { options } from "colorette";
+import TxModal from "./tx-modal";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
+  const [modal, setModal] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
-  const [transactionStatus, setTransactionStatus] = useState(false);
+  const [txHash, setTxHash] = useState("");
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -37,6 +38,7 @@ export default function CreateItem() {
       });
 
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      window.scrollTo(0, document.body.scrollHeight);
       setFileUrl(url);
       setTimeout(() => {
         setUploadStatus(false);
@@ -48,7 +50,6 @@ export default function CreateItem() {
   }
   async function createMarket() {
     const { name, description, price, type, creator } = formInput;
-    console.log(type);
     if (!name || !description || !price || !fileUrl || !type) return;
     /* first, upload to IPFS */
     const data = JSON.stringify({
@@ -65,38 +66,51 @@ export default function CreateItem() {
       createSale(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
+      setUploadStatus(false);
     }
   }
 
   async function createSale(url) {
     setUploadStatus(true);
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
 
-    /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-    let transaction = await contract.createToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
-    let tokenId = value.toNumber();
+      /* next, create the item */
+      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      let transaction = await contract.createToken(url);
+      setModal(true);
+      setTxHash(transaction.hash);
+      let tx = await transaction.wait();
+      let event = tx.events[0];
+      let value = event.args[2];
+      let tokenId = value.toNumber();
+      const price = ethers.utils.parseUnits(formInput.price, "ether");
+      /* then list the item for sale on the marketplace */
+      contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+      let listingPrice = await contract.getListingPrice();
+      listingPrice = listingPrice.toString();
 
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
-      value: listingPrice,
-    });
-    await transaction.wait();
-    setUploadStatus(false);
-    router.push("/");
+      transaction = await contract.createMarketItem(
+        nftaddress,
+        tokenId,
+        price,
+        {
+          value: listingPrice,
+        }
+      );
+      await transaction.wait();
+      setUploadStatus(false);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      setUploadStatus(false);
+    }
   }
+
+  if (modal) return <TxModal txHash={txHash} setModal={setModal} />;
 
   return (
     <div className="flex justify-center duration-200">
@@ -213,10 +227,7 @@ export default function CreateItem() {
           />
         )}
         {uploadStatus ? (
-          <button
-            onClick={createMarket}
-            className="h-20 font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg "
-          >
+          <button className="h-20 font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg ">
             <Image src={Loader} alt="loader" height="50px" width="50px" />
           </button>
         ) : (

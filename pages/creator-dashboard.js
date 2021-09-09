@@ -5,6 +5,7 @@ import Image from "next/image";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import LoadingLogo from "../public/assets/logo/circles.svg";
+import CreatorImg from "../public/assets/logo/photographer.svg";
 import Link from "next/link";
 import Box from "../public/assets/logo/box.svg";
 
@@ -63,7 +64,7 @@ export default function CreatorDashboard() {
     return (
       <div className="flex flex-col justify-center items-center p-8 m-auto bg-white9 w-80 rounded-xl text-center">
         <h1 className="text-2xl font-bold text-black mb-4">No items created</h1>
-        <Link href="/create-item">
+        <Link passHref href="/create-item">
           <button className="font-bold mt-4 bg-blue text-white text-lg rounded p-4 shadow-lg duration-200 hover:bg-green mb-4">
             Create an Nft
           </button>
@@ -86,7 +87,7 @@ export default function CreatorDashboard() {
             Items Created
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-32">
           {nfts.map((nft, i) => (
             <div key={i} className="shadow rounded-xl overflow-hidden">
               <div className="relative -mb-2 cursor-pointer">
@@ -97,7 +98,7 @@ export default function CreatorDashboard() {
                   alt={nft.name}
                   height={800}
                   width={600}
-                  quality={40}
+                  quality={30}
                   objectFit="cover"
                 />
               </div>

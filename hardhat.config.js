@@ -5,6 +5,7 @@ const privateKey = fs.readFileSync(".secret").toString();
 const projectId = fs.readFileSync(".infuraid").toString().trim();
 
 module.exports = {
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
       chainId: 1337,
@@ -12,6 +13,7 @@ module.exports = {
     mumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${projectId}`,
       accounts: [privateKey],
+      gasPrice: 8000000000,
     },
     mainnet: {
       url: `https://polygon-mainnet.infura.io/v3/${projectId}`,

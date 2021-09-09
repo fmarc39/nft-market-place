@@ -24,6 +24,9 @@ module.exports = {
       white: "#FFF",
       black: "#000",
       grey: "#f2e9e4",
+      lightBlack: "#2D2D2E",
+      bgModal: "#3D3D3D",
+      bgExtModal: "rgb(12, 12, 12, 0.9)",
       // tags
       abstract: "#f382ab",
       aerial: "#08e6ff",
