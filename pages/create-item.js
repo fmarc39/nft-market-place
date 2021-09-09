@@ -5,7 +5,9 @@ import { useState } from "react";
 import Web3Modal from "web3modal";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+import LoadingLogo from "../public/assets/logo/circles.svg";
 import { nftaddress, nftmarketaddress } from "../config";
+import Complete from "../public/assets/logo/checked.svg";
 import Loader from "../public/assets/logo/Double Ring-1s-200px (1).svg";
 import Image from "next/image";
 import TxModal from "./tx-modal";
@@ -16,7 +18,9 @@ export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
   const [modal, setModal] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
+  const [txDescription, setTxDescription] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [logo, setLogo] = useState(LoadingLogo);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -38,10 +42,10 @@ export default function CreateItem() {
       });
 
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      window.scrollTo(0, document.body.scrollHeight);
       setFileUrl(url);
       setTimeout(() => {
         setUploadStatus(false);
+        window.scrollTo(0, document.body.scrollHeight);
       }, 3000);
     } catch (error) {
       console.log("Error uploading file: ", error);
@@ -81,6 +85,7 @@ export default function CreateItem() {
       /* next, create the item */
       let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
       let transaction = await contract.createToken(url);
+      setTxDescription("Photo in the process of creation");
       setModal(true);
       setTxHash(transaction.hash);
       let tx = await transaction.wait();
@@ -92,6 +97,13 @@ export default function CreateItem() {
       contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
       let listingPrice = await contract.getListingPrice();
       listingPrice = listingPrice.toString();
+      setLogo(Complete);
+      setTxDescription("Success");
+      setTimeout(() => {
+        setModal(false);
+        setTxDescription("");
+        setLogo(LoadingLogo);
+      }, 2000);
 
       transaction = await contract.createMarketItem(
         nftaddress,
@@ -101,16 +113,38 @@ export default function CreateItem() {
           value: listingPrice,
         }
       );
+      setTxHash(transaction.hash);
+      setTxDescription("Photo in the process of listing on the market");
+      setModal(true);
+
       await transaction.wait();
       setUploadStatus(false);
+      setLogo(Complete);
+      setTxDescription("Success");
+      setTimeout(() => {
+        setModal(false);
+        setTxHash("");
+        setLogo(LoadingLogo);
+      }, 2500);
       router.push("/");
     } catch (error) {
       console.log(error);
       setUploadStatus(false);
+      setModal(false);
+      setTxDescription("");
+      setLogo(LoadingLogo);
     }
   }
 
-  if (modal) return <TxModal txHash={txHash} setModal={setModal} />;
+  if (modal)
+    return (
+      <TxModal
+        txHash={txHash}
+        setModal={setModal}
+        txDescription={txDescription}
+        logo={logo}
+      />
+    );
 
   return (
     <div className="flex justify-center duration-200">

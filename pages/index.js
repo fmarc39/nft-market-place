@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import LoadingLogo from "../public/assets/logo/circles.svg";
+import Complete from "../public/assets/logo/checked.svg";
 import CreatorImg from "../public/assets/logo/photographer.svg";
 import Image from "next/image";
 import Box from "../public/assets/logo/box.svg";
@@ -17,8 +18,10 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
+  const [logo, setLogo] = useState(LoadingLogo);
+  const [txDescription, setTxDescription] = useState("Purchase in progress");
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const [txHash, setTxHash] = useState("");
 
   useEffect(() => {
@@ -77,9 +80,17 @@ export default function Home() {
       }
     );
     console.log(transaction);
-
-    setTx(true);
+    setTxHash(transaction.hash);
+    setModal(true);
     await transaction.wait();
+    setLogo(Complete);
+    setTxDescription("Success");
+    setTimeout(() => {
+      setModal(false);
+      setLogo(LoadingLogo);
+      setTxDescription("Purchase in progress");
+    }, 2500);
+
     loadNFTs();
   }
 
@@ -126,7 +137,15 @@ export default function Home() {
       </div>
     );
 
-  if (modal) return <TxModal txHash={txHash} setModal={setModal} />;
+  if (modal)
+    return (
+      <TxModal
+        txHash={txHash}
+        setModal={setModal}
+        logo={logo}
+        txDescription={txDescription}
+      />
+    );
   return (
     <div className="flex flex-col justify-center">
       <div
