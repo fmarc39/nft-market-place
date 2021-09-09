@@ -12,16 +12,16 @@ import Link from "next/link";
 import { nftaddress, nftmarketaddress } from "../config";
 import { InView } from "react-intersection-observer";
 import TxModal from "./tx-modal";
-
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 export default function Home() {
+  // App original state
   const [nfts, setNfts] = useState([]);
   const [logo, setLogo] = useState(LoadingLogo);
   const [txDescription, setTxDescription] = useState("Purchase in progress");
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(true);
   const [txHash, setTxHash] = useState("");
 
   useEffect(() => {
@@ -79,7 +79,6 @@ export default function Home() {
         value: price,
       }
     );
-    console.log(transaction);
     setTxHash(transaction.hash);
     setModal(true);
     await transaction.wait();
@@ -89,7 +88,7 @@ export default function Home() {
       setModal(false);
       setLogo(LoadingLogo);
       setTxDescription("Purchase in progress");
-    }, 2500);
+    }, 3000);
 
     loadNFTs();
   }
