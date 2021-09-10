@@ -7,9 +7,7 @@ import Image from "next/image";
 import LoadingLogo from "../public/assets/logo/circles.svg";
 import Link from "next/link";
 import Box from "../public/assets/logo/box.svg";
-
 import { nftmarketaddress, nftaddress } from "../config";
-
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 
@@ -18,7 +16,7 @@ export default function MyAssets() {
   const [loadingState, setLoadingState] = useState("not-loaded");
   useEffect(() => {
     loadNFTs();
-  }, [nfts, loadingState]);
+  }, []);
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
       network: "mainnet",

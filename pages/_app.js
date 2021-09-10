@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Logo from "../public/assets/logo/shutter.svg";
 import Image from "next/image";
+import LinkDinLogo from "../public/assets/logo/linkedin.svg";
+import GitHubLogo from "../public/assets/logo/github.svg";
 import HomeLogo from "../public/assets/logo/homepage.svg";
 import Dashboard from "../public/assets/logo/dashboard.svg";
 import Chest from "../public/assets/logo/open-book.svg";
@@ -286,7 +288,7 @@ function MyApp({ Component, pageProps }) {
                 target="blank"
               >
                 <Image
-                  src="/../public/assets/logo/github.png"
+                  src={GitHubLogo}
                   alt="git-hub-logo"
                   height={50}
                   width={50}
@@ -299,8 +301,8 @@ function MyApp({ Component, pageProps }) {
                 target="blank"
               >
                 <Image
-                  src="/../public/assets/logo/linkedin.png"
-                  alt="git-hub-logo"
+                  src={LinkDinLogo}
+                  alt="linkdin-logo"
                   height={50}
                   width={50}
                 />
