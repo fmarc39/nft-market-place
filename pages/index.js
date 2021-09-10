@@ -21,7 +21,7 @@ export default function Home() {
   const [logo, setLogo] = useState(LoadingLogo);
   const [txDescription, setTxDescription] = useState("Purchase in progress");
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const [txHash, setTxHash] = useState("");
 
   useEffect(() => {

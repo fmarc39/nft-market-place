@@ -281,7 +281,10 @@ function MyApp({ Component, pageProps }) {
           <p className="mb-2 text-darkBlue">Création F.marc</p>
           <div className="flex">
             <div className="mr-6">
-              <a href="https://github.com/fmarc39" target="blank">
+              <a
+                href="https://github.com/fmarc39/nft-market-place"
+                target="blank"
+              >
                 <Image
                   src="/../public/assets/logo/github.png"
                   alt="git-hub-logo"
@@ -291,12 +294,17 @@ function MyApp({ Component, pageProps }) {
               </a>
             </div>
             <div>
-              <Image
-                src="/../public/assets/logo/linkedin.png"
-                alt="git-hub-logo"
-                height={50}
-                width={50}
-              />
+              <a
+                href="https://www.linkedin.com/in/fran%C3%A7ois-marc-dev/"
+                target="blank"
+              >
+                <Image
+                  src="/../public/assets/logo/linkedin.png"
+                  alt="git-hub-logo"
+                  height={50}
+                  width={50}
+                />
+              </a>
             </div>
           </div>
         </footer>

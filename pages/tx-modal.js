@@ -19,7 +19,7 @@ const TxModal = ({ txHash, setModal, txDescription, logo }) => {
   });
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-bgExtModal translate-y-11">
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-bgExtModal">
         <div className="relative w-auto my-6 mx-auto max-w-3xl" ref={menuRef}>
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-lightBlack outline-none focus:outline-none">
             <div className="p-6">
@@ -35,7 +35,12 @@ const TxModal = ({ txHash, setModal, txDescription, logo }) => {
             </div>
             <div className="bg-bgModal p-8 m-6 shadow-lg rounded-lg text-white9 flex flex-col items-center">
               <p className="mb-4 font-bold">Tx Hash</p>
-              <p className="text-blue cursor-pointer">{txHash}</p>
+              <a
+                href={`https://mumbai.polygonscan.com/tx/${txHash}`}
+                target="blank"
+              >
+                <p className="text-blue cursor-pointer">{txHash}</p>
+              </a>
             </div>
           </div>
         </div>
