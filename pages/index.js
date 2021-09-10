@@ -4,18 +4,25 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import LoadingLogo from "../public/assets/logo/circles.svg";
+import Complete from "../public/assets/logo/checked.svg";
+import CreatorImg from "../public/assets/logo/photographer.svg";
 import Image from "next/image";
 import Box from "../public/assets/logo/box.svg";
 import Link from "next/link";
 import { nftaddress, nftmarketaddress } from "../config";
 import { InView } from "react-intersection-observer";
-
+import TxModal from "./tx-modal";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 export default function Home() {
+  // App original state
   const [nfts, setNfts] = useState([]);
+  const [logo, setLogo] = useState(LoadingLogo);
+  const [txDescription, setTxDescription] = useState("Purchase in progress");
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const [modal, setModal] = useState(false);
+  const [txHash, setTxHash] = useState("");
 
   useEffect(() => {
     loadNFTs();
@@ -26,7 +33,7 @@ export default function Home() {
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://polygon-mumbai.infura.io/v3/a80e50b776284c9aab8f35a92a730008"
+      "https://polygon-mumbai.infura.io/v3/03ada784b69c47db8a77959223e5e301"
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
@@ -50,6 +57,7 @@ export default function Home() {
           name: meta.data.name,
           type: meta.data.type,
           description: meta.data.description,
+          creator: meta.data.creator,
         };
         return item;
       })
@@ -63,7 +71,6 @@ export default function Home() {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
     const transaction = await contract.createMarketSale(
       nftaddress,
@@ -72,7 +79,17 @@ export default function Home() {
         value: price,
       }
     );
+    setTxHash(transaction.hash);
+    setModal(true);
     await transaction.wait();
+    setLogo(Complete);
+    setTxDescription("Success");
+    setTimeout(() => {
+      setModal(false);
+      setLogo(LoadingLogo);
+      setTxDescription("Purchase in progress");
+    }, 3000);
+
     loadNFTs();
   }
 
@@ -118,6 +135,16 @@ export default function Home() {
         <Image src={LoadingLogo} alt="loading-logo" height={150} width={150} />
       </div>
     );
+
+  if (modal)
+    return (
+      <TxModal
+        txHash={txHash}
+        setModal={setModal}
+        logo={logo}
+        txDescription={txDescription}
+      />
+    );
   return (
     <div className="flex flex-col justify-center">
       <div
@@ -158,6 +185,15 @@ export default function Home() {
                             quality={40}
                             objectFit="cover"
                           />
+                          <div className="absolute bottom-4 left-2 shadow-xl bg-white9 text-black flex justify-center flex-col p-1 rounded-lg border border-white">
+                            <Image
+                              src={CreatorImg}
+                              alt="creator-log"
+                              height={20}
+                              width={20}
+                            />
+                            <p className="text-xs">{nft.creator}</p>
+                          </div>
                         </div>
                       </Link>
                     }
@@ -176,7 +212,7 @@ export default function Home() {
                         {nft.type}
                       </p>
 
-                      <div style={{ height: "70px", overflow: "hidden" }}>
+                      <div style={{ minHeight: "40px", overflow: "hidden" }}>
                         <p className="text-gray-400">{nft.description}</p>
                       </div>
                     </div>
