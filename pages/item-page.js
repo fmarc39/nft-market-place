@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
-import { Image as img } from "next/image";
+import Image from "next/image";
 import LoadingLogo from "../public/assets/logo/circles.svg";
 
 import { nftmarketaddress, nftaddress } from "../config";
@@ -51,29 +51,15 @@ export default function ItemPage() {
           };
           setNft(item);
           setLoadPhoto(true);
-          getMeta(item.image);
         }
       })
     );
   }
 
-  function getMeta(url) {
-    var img = new Image();
-    img.addEventListener("load", function () {
-      alert(this.naturalWidth + " " + this.naturalHeight);
-      setImageSize({
-        ...imageSize,
-        height: this.naturalHeight,
-        width: this.naturalWidth,
-      });
-    });
-    img.src = url;
-  }
-
   if (loadPhoto == false)
     return (
       <div className="flex justify-center items-center h-screen">
-        <img src={LoadingLogo} alt="loading-logo" height={150} width={150} />
+        <Image src={LoadingLogo} alt="loading-logo" height={150} width={150} />
       </div>
     );
 
@@ -84,16 +70,14 @@ export default function ItemPage() {
     >
       {nft && (
         <div className="overflow-hidden mb-8 relative rounded-md shadow-xl">
-          {
-            // eslint-disable-next-line @next/next/link-passhref
-
-            <img
-              src={nft.image}
-              alt={nft.name}
-              height={imageSize.height}
-              width={imageSize.width}
-            />
-          }
+          <Image
+            src={nft.image}
+            alt={nft.name}
+            height={1000}
+            width={1000}
+            quality={100}
+            onLoad={(img) => console.log(img.target)}
+          />
 
           <div className="p-4 bg-white9 -mt-2">
             <p
