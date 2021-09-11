@@ -72,7 +72,7 @@ export default function ItemPage() {
           {
             // eslint-disable-next-line @next/next/link-passhref
 
-            <Image src={nft.image} alt={nft.name} height={1000} width={1000} />
+            <img src={nft.image} alt={nft.name} />
           }
 
           <div className="p-4 bg-white9">
