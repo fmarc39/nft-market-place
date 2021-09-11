@@ -5,6 +5,7 @@ import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import LoadingLogo from "../public/assets/logo/circles.svg";
+import getMeta from "../func/index";
 
 import { nftmarketaddress, nftaddress } from "../config";
 
@@ -13,7 +14,6 @@ import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 
 export default function ItemPage() {
   const [nft, setNft] = useState();
-  const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
   const router = useRouter();
   const [loadPhoto, setLoadPhoto] = useState(false);
   useEffect(() => {
@@ -48,6 +48,8 @@ export default function ItemPage() {
             name: meta.data.name,
             type: meta.data.type,
             description: meta.data.description,
+            height: meta.data.height,
+            width: meta.data.width,
           };
           setNft(item);
           setLoadPhoto(true);
@@ -73,10 +75,9 @@ export default function ItemPage() {
           <Image
             src={nft.image}
             alt={nft.name}
-            height={1000}
-            width={1000}
+            height={nft.height}
+            width={nft.width}
             quality={100}
-            onLoad={(img) => console.log(img.target)}
           />
 
           <div className="p-4 bg-white9 -mt-2">

@@ -11,6 +11,7 @@ import Complete from "../public/assets/logo/checked.svg";
 import Loader from "../public/assets/logo/Double Ring-1s-200px (1).svg";
 import Image from "next/image";
 import TxModal from "./tx-modal";
+import getMeta from "../func/index";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -20,12 +21,16 @@ export default function CreateItem() {
   const [uploadStatus, setUploadStatus] = useState(false);
   const [txDescription, setTxDescription] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [imgHeight, setImgHeight] = useState("");
+  const [imgWidth, setImgWidth] = useState("");
   const [logo, setLogo] = useState(LoadingLogo);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
     description: "",
     creator: "",
+    height: "",
+    width: "",
     type: "Abstract",
   });
   const [uploadProg, setUploadProg] = useState(0);
@@ -35,6 +40,7 @@ export default function CreateItem() {
     setUploadStatus(true);
     const file = e.target.files[0];
     const fileSize = e.target.files[0].size;
+
     try {
       const added = await client.add(file, {
         progress: (prog) =>
@@ -43,10 +49,11 @@ export default function CreateItem() {
 
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
+
       setTimeout(() => {
         setUploadStatus(false);
         window.scrollTo(0, document.body.scrollHeight);
-      }, 3000);
+      }, 2500);
     } catch (error) {
       console.log("Error uploading file: ", error);
       setUploadStatus(false);
@@ -54,6 +61,10 @@ export default function CreateItem() {
   }
   async function createMarket() {
     const { name, description, price, type, creator } = formInput;
+    // Get the size of the image
+    const imgTarget = await getMeta(fileUrl);
+    setImgHeight(imgTarget.naturalHeight);
+    setImgWidth(imgTarget.naturalWidth);
     if (!name || !description || !price || !fileUrl || !type) return;
     /* first, upload to IPFS */
     const data = JSON.stringify({
@@ -62,6 +73,8 @@ export default function CreateItem() {
       type,
       creator,
       image: fileUrl,
+      height: imgHeight,
+      width: imgWidth,
     });
     try {
       const added = await client.add(data);

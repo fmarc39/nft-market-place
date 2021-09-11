@@ -58,6 +58,8 @@ export default function Home() {
           type: meta.data.type,
           description: meta.data.description,
           creator: meta.data.creator,
+          height: meta.data.height,
+          width: meta.data.width,
         };
         return item;
       })
@@ -154,6 +156,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4 pt-4 mb-32">
           {nfts.map((nft, i) => {
             const color = tagColors(nft.type);
+            console.log(nft);
             return (
               <InView key={i} triggerOnce={true} threshold={threshold}>
                 {({ inView, ref }) => (
