@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
-import Image from "next/image";
+import { Image as img } from "next/image";
 import LoadingLogo from "../public/assets/logo/circles.svg";
 
 import { nftmarketaddress, nftaddress } from "../config";
@@ -13,11 +13,12 @@ import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 
 export default function ItemPage() {
   const [nft, setNft] = useState();
+  const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
   const router = useRouter();
   const [loadPhoto, setLoadPhoto] = useState(false);
   useEffect(() => {
     loadNFTs();
-  });
+  }, []);
 
   async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -50,15 +51,29 @@ export default function ItemPage() {
           };
           setNft(item);
           setLoadPhoto(true);
+          getMeta(item.image);
         }
       })
     );
   }
 
+  function getMeta(url) {
+    var img = new Image();
+    img.addEventListener("load", function () {
+      alert(this.naturalWidth + " " + this.naturalHeight);
+      setImageSize({
+        ...imageSize,
+        height: this.naturalHeight,
+        width: this.naturalWidth,
+      });
+    });
+    img.src = url;
+  }
+
   if (loadPhoto == false)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Image src={LoadingLogo} alt="loading-logo" height={150} width={150} />
+        <img src={LoadingLogo} alt="loading-logo" height={150} width={150} />
       </div>
     );
 
@@ -72,10 +87,15 @@ export default function ItemPage() {
           {
             // eslint-disable-next-line @next/next/link-passhref
 
-            <img src={nft.image} alt={nft.name} />
+            <img
+              src={nft.image}
+              alt={nft.name}
+              height={imageSize.height}
+              width={imageSize.width}
+            />
           }
 
-          <div className="p-4 bg-white9">
+          <div className="p-4 bg-white9 -mt-2">
             <p
               style={{ height: "64px" }}
               className="text-5xl font-semibold text-center"
